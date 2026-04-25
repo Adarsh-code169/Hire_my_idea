@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, ScrollView, SafeAreaView, TouchableOpacity, Dimensions, StatusBar } from 'react-native';
-import { Home, Clock, BarChart2, Plus, Grip } from 'lucide-react-native';
+import { Home, Clock, BarChart2, Plus, Grip, Construction } from 'lucide-react-native';
 import StabilitySummary from './src/components/StabilitySummary';
 import CycleTrends from './src/components/CycleTrends';
 import BodyMetabolicTrends from './src/components/BodyMetabolicTrends';
@@ -8,47 +8,78 @@ import BodySignals from './src/components/BodySignals';
 import LifestyleImpact from './src/components/LifestyleImpact';
 import { COLORS } from './src/theme';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
+
+const PlaceholderScreen = ({ title }) => (
+  <View style={styles.placeholderContainer}>
+    <Construction size={64} color={COLORS.purple} style={{ marginBottom: 16 }} />
+    <Text style={styles.placeholderTitle}>{title}</Text>
+    <Text style={styles.placeholderText}>This feature is currently in development.</Text>
+  </View>
+);
 
 export default function App() {
-  const activeTab = 'insights';
+  const [activeTab, setActiveTab] = useState('insights');
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
+      
       <View style={styles.header}>
         <View style={styles.headerIconContainer}>
            <Grip color={COLORS.purple} size={24} />
         </View>
-        <Text style={styles.headerTitle}>Insights</Text>
+        <Text style={styles.headerTitle}>
+          {activeTab === 'insights' ? 'Insights' : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
+        </Text>
         <View style={{ width: 24 }} />
       </View>
-      <ScrollView 
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <StabilitySummary />
-        <CycleTrends />
-        <BodyMetabolicTrends />
-        <BodySignals />
-        <LifestyleImpact />
-      </ScrollView>
+
+      <View style={{ flex: 1 }}>
+        {activeTab === 'insights' ? (
+          <ScrollView 
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            <StabilitySummary />
+            <CycleTrends />
+            <BodyMetabolicTrends />
+            <BodySignals />
+            <LifestyleImpact />
+          </ScrollView>
+        ) : (
+          <PlaceholderScreen title={activeTab === 'home' ? 'Home Dashboard' : 'Tracking Center'} />
+        )}
+      </View>
+
       <View style={styles.bottomNavWrapper}>
         <View style={styles.bottomNav}>
-          <TouchableOpacity style={styles.navItem}>
-            <Home color={COLORS.textSecondary} size={24} />
-            <Text style={styles.navText}>Home</Text>
+          <TouchableOpacity 
+            style={styles.navItem} 
+            onPress={() => setActiveTab('home')}
+          >
+            <Home color={activeTab === 'home' ? COLORS.textPrimary : COLORS.textSecondary} size={24} />
+            <Text style={[styles.navText, activeTab === 'home' && styles.navTextActive]}>Home</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
-            <Clock color={COLORS.textSecondary} size={24} />
-            <Text style={styles.navText}>Track</Text>
+          
+          <TouchableOpacity 
+            style={styles.navItem}
+            onPress={() => setActiveTab('track')}
+          >
+            <Clock color={activeTab === 'track' ? COLORS.textPrimary : COLORS.textSecondary} size={24} />
+            <Text style={[styles.navText, activeTab === 'track' && styles.navTextActive]}>Track</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
-            <BarChart2 color={COLORS.textPrimary} size={24} />
-            <Text style={[styles.navText, styles.navTextActive]}>Insights</Text>
+          
+          <TouchableOpacity 
+            style={styles.navItem}
+            onPress={() => setActiveTab('insights')}
+          >
+            <BarChart2 color={activeTab === 'insights' ? COLORS.textPrimary : COLORS.textSecondary} size={24} />
+            <Text style={[styles.navText, activeTab === 'insights' && styles.navTextActive]}>Insights</Text>
           </TouchableOpacity>
         </View>
+
         <TouchableOpacity style={styles.fab}>
           <Plus color={COLORS.textPrimary} size={24} />
         </TouchableOpacity>
@@ -84,6 +115,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 10,
     paddingBottom: 20,
+  },
+  placeholderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  placeholderTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: COLORS.textPrimary,
+    marginBottom: 8,
+  },
+  placeholderText: {
+    fontSize: 16,
+    color: COLORS.textSecondary,
+    textAlign: 'center',
   },
   bottomNavWrapper: {
     position: 'absolute',
