@@ -1,94 +1,100 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Svg, { Path, Defs, LinearGradient, Stop, Circle } from 'react-native-svg';
-import { COLORS, STYLES } from '../theme';
+import { STYLES } from '../theme';
+
+const cardWidth = 343;
+const cardHeight = 266;
 
 const BodyMetabolicTrends = () => {
-  const [activeTab, setActiveTab] = useState('Monthly');
-
-  // Approximate data points for the SVG path
-  // x goes from 0 to 300, y goes from 0 (top, weight 75) to 120 (bottom, weight 35)
-  // Data points: Jan(~38), Feb(~48), Mar(~40), Apr(~70), May(~52)
-  // Mapped to Y coordinates (inverted scale, 0 is top): 
-  // 75kg -> y=0, 35kg -> y=120
-  // Range = 40kg = 120px -> 3px per kg
-  // Jan 38kg -> 120 - (38-35)*3 = 111
-  // Feb 48kg -> 120 - (48-35)*3 = 81
-  // Mar 40kg -> 120 - (40-35)*3 = 105
-  // Apr 70kg -> 120 - (70-35)*3 = 15
-  // May 52kg -> 120 - (52-35)*3 = 69
-  // 
-  // X coordinates for 5 points (0, 75, 150, 225, 300)
-
   return (
     <View style={styles.container}>
       <Text style={STYLES.sectionTitle}>Body & Metabolic Trends</Text>
       
-      <View style={STYLES.card}>
-        <View style={styles.headerRow}>
+      <View style={[styles.cardContainer, { width: cardWidth, height: cardHeight }]}>
+        <View style={styles.header}>
           <View>
-            <Text style={styles.cardTitle}>Your weight</Text>
-            <Text style={styles.cardSubtitle}>in kg</Text>
+            <Text style={styles.title}>Your weight</Text>
+            <Text style={styles.subtitle}>in kg</Text>
           </View>
           
           <View style={styles.toggleContainer}>
-            <TouchableOpacity 
-              style={[styles.toggleBtn, activeTab === 'Monthly' && styles.toggleBtnActive]}
-              onPress={() => setActiveTab('Monthly')}
-            >
-              <Text style={[styles.toggleText, activeTab === 'Monthly' && styles.toggleTextActive]}>
-                Monthly
-              </Text>
+            <TouchableOpacity style={styles.toggleActive}>
+              <Text style={styles.toggleTextActive}>Monthly</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.toggleBtn, activeTab === 'Weekly' && styles.toggleBtnActive]}
-              onPress={() => setActiveTab('Weekly')}
-            >
-              <Text style={[styles.toggleText, activeTab === 'Weekly' && styles.toggleTextActive]}>
-                Weekly
-              </Text>
+            <TouchableOpacity style={styles.toggleInactive}>
+              <Text style={styles.toggleTextInactive}>Weekly</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        <View style={styles.chartContainer}>
-          <Svg width="100%" height={150} viewBox="0 0 300 150">
-            <Defs>
-              <LinearGradient id="weightGrad" x1="0" y1="0" x2="0" y2="1">
-                <Stop offset="0" stopColor={COLORS.pink} stopOpacity="0.4" />
-                <Stop offset="1" stopColor={COLORS.pink} stopOpacity="0.0" />
-              </LinearGradient>
-            </Defs>
-            <Path
-              d="M10,125 C40,111 50,81 85,81 C120,81 130,105 160,105 C190,105 210,15 235,15 C260,15 280,69 310,69 L310,150 L10,150 Z"
-              fill="url(#weightGrad)"
-            />
-            <Path
-              d="M10,125 C40,111 50,81 85,81 C120,81 130,105 160,105 C190,105 210,15 235,15 C260,15 280,69 310,69"
-              fill="none"
-              stroke={COLORS.pink}
-              strokeWidth="2"
-            />
-            <Circle cx="35" cy="113" r="3" fill="#FFF" stroke={COLORS.pink} strokeWidth="1.5" />
-            <Circle cx="85" cy="81" r="3" fill="#FFF" stroke={COLORS.pink} strokeWidth="1.5" />
-            <Circle cx="150" cy="100" r="3" fill="#FFF" stroke={COLORS.pink} strokeWidth="1.5" />
-            <Circle cx="235" cy="15" r="3" fill="#FFF" stroke={COLORS.pink} strokeWidth="1.5" />
-            <Circle cx="290" cy="55" r="3" fill="#FFF" stroke={COLORS.pink} strokeWidth="1.5" />
-            <Path d="M0,0 L300,0" stroke="#F3F4F6" strokeWidth="1" strokeDasharray="4 4" />
-            <Path d="M0,75 L300,75" stroke="#F3F4F6" strokeWidth="1" strokeDasharray="4 4" />
-            <Path d="M0,150 L300,150" stroke="#F3F4F6" strokeWidth="1" strokeDasharray="4 4" />
-          </Svg>
-          <View style={styles.yAxisLabels}>
-            <Text style={styles.axisText}>75</Text>
-            <Text style={styles.axisText}>50</Text>
-            <Text style={styles.axisText}>35</Text>
+        <View style={styles.chartWrapper}>
+          {/* Y-Axis Labels and Horizontal Dashed Lines */}
+          <View style={styles.chartBackground}>
+            <View style={styles.gridLineContainer}>
+               <Text style={styles.yAxisText}>75</Text>
+               <View style={styles.dashedLine} />
+            </View>
+            <View style={styles.gridLineContainer}>
+               <Text style={styles.yAxisText}>50</Text>
+               <View style={styles.dashedLine} />
+            </View>
+            <View style={styles.gridLineContainer}>
+               <Text style={styles.yAxisText}>25</Text>
+               <View style={styles.dashedLine} />
+            </View>
           </View>
-          <View style={styles.xAxisLabels}>
-            <Text style={styles.axisText}>Jan</Text>
-            <Text style={styles.axisText}>Feb</Text>
-            <Text style={styles.axisText}>Mar</Text>
-            <Text style={styles.axisText}>Apr</Text>
-            <Text style={styles.axisText}>May</Text>
+
+          <View style={styles.svgContainer}>
+            <Svg width={282} height={156} viewBox="0 0 282 156">
+              <Defs>
+                <LinearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <Stop offset="0" stopColor="#E29393" stopOpacity="0.3" />
+                  <Stop offset="0.6" stopColor="#E29393" stopOpacity="0.05" />
+                  <Stop offset="1" stopColor="#E29393" stopOpacity="0" />
+                </LinearGradient>
+              </Defs>
+
+              {/* Area Fill */}
+              <Path
+                d="M0,145 C30,145 40,120 55,120 C85,120 110,95 130,95 C150,95 170,115 190,115 C220,115 230,25 260,25 C275,25 280,80 282,80 L282,156 L0,156 Z"
+                fill="url(#areaGrad)"
+              />
+
+              {/* Data Line */}
+              <Path
+                d="M0,145 C30,145 40,120 55,120 C85,120 110,95 130,95 C150,95 170,115 190,115 C220,115 230,25 260,25 C275,25 280,80 282,80"
+                fill="none"
+                stroke="#E29393"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+
+              {/* Data Dots with Enhanced Glow effect */}
+              {[
+                { x: 55, y: 120 },
+                { x: 130, y: 95 },
+                { x: 190, y: 115 },
+                { x: 260, y: 25 },
+                { x: 282, y: 80 }
+              ].map((dot, i) => (
+                <React.Fragment key={i}>
+                  {/* Multi-layered Glow */}
+                  <Circle cx={dot.x} cy={dot.y} r="10" fill="#E29393" opacity={0.1} />
+                  <Circle cx={dot.x} cy={dot.y} r="7" fill="#E29393" opacity={0.2} />
+                  {/* Core Dot */}
+                  <Circle cx={dot.x} cy={dot.y} r="5" fill="white" stroke="#E29393" strokeWidth="2.5" />
+                </React.Fragment>
+              ))}
+            </Svg>
+
+            <View style={styles.xAxisLabels}>
+              <Text style={styles.xAxisText}>Jan</Text>
+              <Text style={styles.xAxisText}>Feb</Text>
+              <Text style={styles.xAxisText}>Mar</Text>
+              <Text style={styles.xAxisText}>Apr</Text>
+              <Text style={styles.xAxisText}>May</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -98,67 +104,116 @@ const BodyMetabolicTrends = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 10,
+    marginBottom: 32,
   },
-  headerRow: {
+  cardContainer: {
+    alignSelf: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 18, // Balanced padding
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 2,
+  },
+  header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 20,
+    marginBottom: 12, // Reduced from 20
   },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: COLORS.textPrimary,
+  title: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#000',
   },
-  cardSubtitle: {
-    fontSize: 12,
-    color: COLORS.textSecondary,
-    marginTop: 2,
+  subtitle: {
+    fontSize: 18,
+    color: '#9CA3AF',
+    marginTop: 0, // Reduced from 2
   },
   toggleContainer: {
+    width: 104,
+    height: 32,
     flexDirection: 'row',
-    backgroundColor: '#F3F4F6',
-    borderRadius: 20,
-    padding: 2,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  toggleBtn: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 18,
-  },
-  toggleBtnActive: {
+  toggleActive: {
+    width: 50,
+    height: 32,
     backgroundColor: '#000',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  toggleText: {
-    fontSize: 10,
-    color: COLORS.textSecondary,
-    fontWeight: '500',
+  toggleInactive: {
+    width: 50,
+    height: 32,
+    backgroundColor: '#F7F6F6',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   toggleTextActive: {
     color: '#FFF',
+    fontSize: 11,
+    fontWeight: '600',
   },
-  chartContainer: {
+  toggleTextInactive: {
+    color: '#9CA3AF',
+    fontSize: 11,
+    fontWeight: '500',
+  },
+  chartWrapper: {
+    marginTop: 0,
     position: 'relative',
-    marginTop: 10,
-    paddingLeft: 20, // space for Y axis
+    height: 180, // Container for background + svg + labels
   },
-  yAxisLabels: {
+  chartBackground: {
     position: 'absolute',
     left: 0,
-    top: -5,
-    bottom: -5,
+    right: 0,
+    top: 0,
+    bottom: 30,
     justifyContent: 'space-between',
+    zIndex: 0,
+  },
+  gridLineContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  yAxisText: {
+    width: 25,
+    fontSize: 14,
+    color: '#9CA3AF',
+    marginRight: 10,
+  },
+  dashedLine: {
+    flex: 1,
+    height: 1,
+    borderBottomWidth: 1,
+    borderColor: '#F3F4F6',
+    borderStyle: 'dashed',
+  },
+  svgContainer: {
+    paddingLeft: 35,
+    marginTop: 0,
+    width: 282 + 35,
   },
   xAxisLabels: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    marginTop: 10,
+    marginTop: 5,
+    paddingLeft: 35, // Align with SVG start
+    paddingRight: 10,
   },
-  axisText: {
-    fontSize: 10,
-    color: COLORS.textSecondary,
+  xAxisText: {
+    fontSize: 14,
+    color: '#9CA3AF',
+    fontWeight: '500',
   }
 });
 

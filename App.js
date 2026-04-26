@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, ScrollView, SafeAreaView, TouchableOpacity, Dimensions, StatusBar } from 'react-native';
 import { Home, Clock, BarChart2, Plus, Grip, Construction } from 'lucide-react-native';
+import Svg, { Circle } from 'react-native-svg';
+import { LinearGradient as ExpoLinearGradient } from 'expo-linear-gradient';
 import StabilitySummary from './src/components/StabilitySummary';
 import CycleTrends from './src/components/CycleTrends';
 import BodyMetabolicTrends from './src/components/BodyMetabolicTrends';
+import TopSymptoms from './src/components/TopSymptoms';
 import BodySignals from './src/components/BodySignals';
 import LifestyleImpact from './src/components/LifestyleImpact';
+import BottomNav from './src/components/BottomNav';
 import { COLORS } from './src/theme';
 
 const { width, height } = Dimensions.get('window');
@@ -18,16 +22,32 @@ const PlaceholderScreen = ({ title }) => (
   </View>
 );
 
+const CustomGridIcon = ({ size = 24 }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Circle cx="7" cy="7" r="4" fill={COLORS.purple} />
+    <Circle cx="17" cy="7" r="4" fill={COLORS.purpleLight} />
+    <Circle cx="7" cy="17" r="4" fill={COLORS.purpleLight} />
+    <Circle cx="17" cy="17" r="4" fill={COLORS.purple} />
+  </Svg>
+);
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('insights');
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <ExpoLinearGradient
+        colors={['rgba(233, 149, 151, 0.15)', 'rgba(110, 140, 130, 0.08)', 'rgba(110, 140, 130, 0.12)']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0.8 }}
+        locations={[0, 0.65, 1]}
+        style={StyleSheet.absoluteFill}
+      />
       <StatusBar barStyle="dark-content" />
-      
+
       <View style={styles.header}>
         <View style={styles.headerIconContainer}>
-           <Grip color={COLORS.purple} size={24} />
+          <CustomGridIcon size={24} />
         </View>
         <Text style={styles.headerTitle}>
           {activeTab === 'insights' ? 'Insights' : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
@@ -37,7 +57,7 @@ export default function App() {
 
       <View style={{ flex: 1 }}>
         {activeTab === 'insights' ? (
-          <ScrollView 
+          <ScrollView
             style={styles.scrollView}
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
@@ -45,7 +65,7 @@ export default function App() {
             <StabilitySummary />
             <CycleTrends />
             <BodyMetabolicTrends />
-            <BodySignals />
+            <TopSymptoms />
             <LifestyleImpact />
           </ScrollView>
         ) : (
@@ -53,37 +73,7 @@ export default function App() {
         )}
       </View>
 
-      <View style={styles.bottomNavWrapper}>
-        <View style={styles.bottomNav}>
-          <TouchableOpacity 
-            style={styles.navItem} 
-            onPress={() => setActiveTab('home')}
-          >
-            <Home color={activeTab === 'home' ? COLORS.textPrimary : COLORS.textSecondary} size={24} />
-            <Text style={[styles.navText, activeTab === 'home' && styles.navTextActive]}>Home</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={styles.navItem}
-            onPress={() => setActiveTab('track')}
-          >
-            <Clock color={activeTab === 'track' ? COLORS.textPrimary : COLORS.textSecondary} size={24} />
-            <Text style={[styles.navText, activeTab === 'track' && styles.navTextActive]}>Track</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={styles.navItem}
-            onPress={() => setActiveTab('insights')}
-          >
-            <BarChart2 color={activeTab === 'insights' ? COLORS.textPrimary : COLORS.textSecondary} size={24} />
-            <Text style={[styles.navText, activeTab === 'insights' && styles.navTextActive]}>Insights</Text>
-          </TouchableOpacity>
-        </View>
-
-        <TouchableOpacity style={styles.fab}>
-          <Plus color={COLORS.textPrimary} size={24} />
-        </TouchableOpacity>
-      </View>
+      <BottomNav activeTab={activeTab} onTabPress={setActiveTab} />
     </SafeAreaView>
   );
 }
@@ -91,7 +81,7 @@ export default function App() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: 'transparent',
   },
   header: {
     flexDirection: 'row',
@@ -105,8 +95,10 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    lineHeight: 21,
+    fontWeight: '700',
     color: COLORS.textPrimary,
+    textAlign: 'center',
   },
   scrollView: {
     flex: 1,
@@ -114,7 +106,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 20,
     paddingTop: 10,
-    paddingBottom: 20,
+    paddingBottom: 90, // Reduced space to leave a little gap above the floating nav
   },
   placeholderContainer: {
     flex: 1,
@@ -132,48 +124,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.textSecondary,
     textAlign: 'center',
-  },
-  bottomNavWrapper: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingBottom: 30,
-    backgroundColor: 'transparent',
-  },
-  bottomNav: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 30,
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginRight: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    elevation: 10,
-  },
-  navItem: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  navText: {
-    fontSize: 10,
-    color: COLORS.textSecondary,
-    marginTop: 4,
-    fontWeight: '500',
-  },
-  navTextActive: {
-    color: COLORS.textPrimary,
-    fontWeight: '700',
   },
   fab: {
     width: 56,

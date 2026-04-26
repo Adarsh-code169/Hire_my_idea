@@ -101,7 +101,7 @@ const BodySignals = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 10,
+    marginBottom: 32,
   },
   header: {
     marginBottom: 10,

@@ -24,13 +24,14 @@ export const STYLES = {
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 2,
-    marginBottom: 24,
+    marginBottom: 32, // Increased for better distribution
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 18,
+    lineHeight: 21,
     fontWeight: '700',
     color: COLORS.textPrimary,
-    marginBottom: 12,
+    marginBottom: 16, // Increased for better distribution
     marginLeft: 4,
   }
 };
