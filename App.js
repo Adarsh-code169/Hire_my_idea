@@ -37,10 +37,10 @@ export default function App() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ExpoLinearGradient
-        colors={['rgba(233, 149, 151, 0.15)', 'rgba(110, 140, 130, 0.08)', 'rgba(110, 140, 130, 0.12)']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0.8 }}
-        locations={[0, 0.65, 1]}
+        colors={['rgba(210, 122, 136, 0.46)', 'rgba(143, 209, 181, 0.12)', 'rgba(143, 209, 181, 0.08)']}
+        start={{ x: 1, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        locations={[0, 0.6, 1]}
         style={StyleSheet.absoluteFill}
       />
       <StatusBar barStyle="dark-content" />

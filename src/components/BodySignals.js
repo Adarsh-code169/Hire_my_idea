@@ -39,7 +39,7 @@ const BodySignals = () => {
                 cx="125"
                 cy="125"
                 r={radius}
-                stroke="#FDE2E4"
+                stroke="#E5A8B2" // Light Rose
                 strokeWidth={strokeWidth}
                 fill="transparent"
                 strokeDasharray={`${moodVal} ${circumference}`}
@@ -59,7 +59,7 @@ const BodySignals = () => {
                 cx="125"
                 cy="125"
                 r={radius}
-                stroke="#F4Bebf"
+                stroke={COLORS.pink}
                 strokeWidth={strokeWidth}
                 fill="transparent"
                 strokeDasharray={`${fatigueVal} ${circumference}`}

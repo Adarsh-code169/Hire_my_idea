@@ -1,11 +1,11 @@
 export const COLORS = {
-  background: '#F8F9FB',
+  background: '#F0F9F6',
   cardBg: '#FFFFFF',
   textPrimary: '#1A1D23',
   textSecondary: '#6B7280',
   purple: '#A78BFA',
   purpleLight: '#E0D4FC',
-  pink: '#FDA4AF',
+  pink: '#D27A88',
   teal: '#8fd1b5',
   tealDark: '#0D9488',
   white: '#FFFFFF',

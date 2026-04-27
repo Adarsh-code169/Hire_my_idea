@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     height: 38,
-    backgroundColor: '#ECA0A0',
+    backgroundColor: COLORS.pink,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 12,
